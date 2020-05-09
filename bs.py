@@ -20,10 +20,15 @@ def getInfo(url, f):
             addr = header.find_next("span", string=["Address:", "Address: "])
             if addr:
                 #Can change to write to REST framework when set up
-                print(addr.find_next("span").text)
                 if addr.find_next("span").text[-1] == '\n':
                     addr.find_next("span").text = addr.find_next("span").text.translate({ord('\n'): None})
-                f.write("{}\nAddress: {}\n".format(re.sub(r'^.*?. ', '', header.text), addr.find_next("span").text))
+
+                regexp = re.compile(r'Opening hours|44|Telephone:')
+                if regexp.search(addr.find_next("span").text):
+                    print('Contains Opening hours')
+                    continue
+                else:
+                    f.write("{}\nAddress: {}\n".format(re.sub(r'^.*?. ', '', header.text), addr.find_next("span").text))
         except:
             continue
 
@@ -38,7 +43,7 @@ class bot():
         sleep(1)
         f = open('data.txt', 'a')
         page=1
-        for i in range(2): 
+        for i in range(10): 
             handle = self.driver.window_handles;           
             if len(handle)>1:
                 print('New tab opened!')
@@ -67,8 +72,6 @@ class bot():
                 print('Finish!')
                 break
             
-
-
 x = bot()
 x.getData()
-
+# Emma softsserve
